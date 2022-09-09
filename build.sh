@@ -7,14 +7,24 @@ if [ "$1" = "example" ]; then
   CMAKE_ARGS="-DBUILD_EXAMPLE=1"
 fi
 
+if [ "$(uname)" = "Linux" ]; then
+  CPU_CORES="$(nproc)"
+  TOOLCHAIN_FILE="-DCMAKE_TOOLCHAIN_FILE=cmake/gcc.cmake"
+elif [ "$(uname)" = "Darwin" ]; then
+  CPU_CORES="$(sysctl -n hw.ncpu)"
+  TOOLCHAIN_FILE="-DCMAKE_TOOLCHAIN_FILE=cmake/clang.cmake"
+fi
+
 mkdir -p .build-external; pushd .build-external
 cmake ../external
-make -j "$(nproc)"
+make -j "$CPU_CORES"
 popd
 
-mkdir -p .build-x86; pushd .build-x86
-cmake "$CMAKE_ARGS" -DCMAKE_TOOLCHAIN_FILE=cmake/gcc.cmake ..
-make -j "$(nproc)"
+arch_name="$(uname -m)"
+
+mkdir -p ".build-$arch_name"; pushd ".build-$arch_name"
+cmake "$CMAKE_ARGS" "$TOOLCHAIN_FILE" ..
+make -j "$CPU_CORES"
 
 if [ "$1" = "coverage" ]; then
   lcov -q -c -i -d . -o base.info

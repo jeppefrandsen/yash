@@ -3,7 +3,7 @@
 
 #include <Yash.h>
 #include <con.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 void i2cRead(const std::vector<std::string>& args)
 {
