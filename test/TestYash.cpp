@@ -36,7 +36,8 @@ TEST_CASE("Yash test")
 
     std::string prompt = "$ ";
     const int commandHistorySize { 10 };
-    Yash::Yash<std::size(commands)> yash(commands, commandHistorySize);
+    typedef Yash::Yash<std::size(commands)> Yash_t;
+    Yash_t yash(commands, commandHistorySize);
 
     yash.setPrint(print);
     yash.setPrompt(prompt);
@@ -274,9 +275,9 @@ TEST_CASE("Yash test")
     SECTION("Test setCharacter function with ESC/LeftBracket input")
     {
         yash.setCharacter(yash.Esc);
-        CHECK(yash.m_ctrlState == yash.CtrlState::Esc);
+        CHECK(yash.m_ctrlState == Yash_t::CtrlState::Esc);
         yash.setCharacter(yash.LeftBracket);
-        CHECK(yash.m_ctrlState == yash.CtrlState::LeftBracket);
+        CHECK(yash.m_ctrlState == Yash_t::CtrlState::LeftBracket);
     }
 
     SECTION("Test setCharacter function with 'i21c' and backspace character input")

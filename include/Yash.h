@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <array>
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
